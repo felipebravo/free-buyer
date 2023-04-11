@@ -12,12 +12,15 @@ import {
 import { ProductsService } from './products.service';
 import * as jwt from 'jsonwebtoken';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productService: ProductsService) {}
 
   @Post()
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   create(@Body() createProductDto, @Req() req) {
     const token = req.headers.authorization.split(' ')[1];
@@ -35,18 +38,21 @@ export class ProductsController {
   }
 
   @Get(':id')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.productService.findOne(id);
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   delete(@Param('id', ParseUUIDPipe) id: string) {
     return this.productService.delete(id);
   }
 
   @Get(':id/order')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   findOrderByProduct(@Param('id', ParseUUIDPipe) id: string) {
     return this.productService.findOrderByProduct(id);

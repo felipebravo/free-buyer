@@ -1,6 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateAddressDto {
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   zip_code: string;
@@ -21,6 +23,7 @@ export class CreateAddressDto {
   @IsNotEmpty()
   readonly street?: string;
 
+  @ApiProperty()
   @IsInt()
   @IsNotEmpty()
   number: number;
