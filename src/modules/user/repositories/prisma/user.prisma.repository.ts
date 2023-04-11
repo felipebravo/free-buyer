@@ -10,13 +10,20 @@ export class PrismaUsersRepository implements UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: CreateUserDto): Promise<User> {
-    const user = new User();
-    Object.assign(user, {
-      ...data,
-    });
-
     const newUser = await this.prisma.user.create({
-      data: { ...user },
+      data: {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        address: {
+          connect: {
+            id: data.address.id,
+          },
+        },
+      },
+      include: {
+        address: true,
+      },
     });
 
     return plainToInstance(User, newUser);
@@ -45,6 +52,7 @@ export class PrismaUsersRepository implements UsersRepository {
   async findUserByEmail(email: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: { email },
+      include: { address: true },
     });
 
     return user;

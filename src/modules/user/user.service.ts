@@ -9,12 +9,17 @@ import { UsersRepository } from './repositories/user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as jwt from 'jsonwebtoken';
 import { Request } from 'express';
+import axios from 'axios';
+import { AddressRepository } from '../address/repositories/address.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private userRepository: UsersRepository) {}
-
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
+  constructor(
+    private userRepository: UsersRepository,
+    private addressRepository: AddressRepository,
+  ) {}
+  //: Promise<User>
+  async createUser(createUserDto) {
     const findUser = await this.userRepository.findUserByEmail(
       createUserDto.email,
     );
@@ -23,9 +28,27 @@ export class UserService {
       throw new ConflictException('email already exists');
     }
 
-    const user = await this.userRepository.create(createUserDto);
+    const { address, ...user } = createUserDto;
 
-    return user;
+    const addressRes = await axios.get(
+      `https://viacep.com.br/ws/${address.zip_code}/json`,
+    );
+    const { cep, logradouro, bairro, localidade, uf } = addressRes.data;
+
+    const fullAddress = {
+      zip_code: cep.replace('-', ''),
+      city: localidade,
+      state: uf,
+      district: bairro,
+      street: logradouro,
+      number: address.number,
+    };
+
+    const createdAddress = await this.addressRepository.create(fullAddress);
+
+    const fullUser = { ...user, address: { ...createdAddress } };
+
+    return await this.userRepository.create(fullUser);
   }
 
   async findAll() {
