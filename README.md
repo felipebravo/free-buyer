@@ -32,7 +32,7 @@
 - `./prisma/schema.prisma`: Aqui o arquivo com as definições de modelos de dados, relações, campos, tipos e configurações do banco de dados.
 -  `./src/database/prisma.service.ts`: Aqui estabelecemos a conexão com o banco de dados quando o módulo do Nest.js é inicializado e garantimos que a conexão seja fechada corretamente ao finalizar a aplicação.
 
-### Como user?
+### Como usar?
 
 - Execute `npm run start: dev` para inicializar o servidor em modo de desenvolvimento para alterar o código fonte e ver os resultados em tempo real.
 
