@@ -16,7 +16,10 @@ export class PrismaOrdersRepository implements OrdersRepository {
   }
 
   async findOne(id: string): Promise<Order> {
-    const order = await this.prisma.order.findUnique({ where: { id } });
+    const order = await this.prisma.order.findUnique({
+      where: { id },
+      include: { products: true },
+    });
 
     return plainToInstance(Order, order);
   }

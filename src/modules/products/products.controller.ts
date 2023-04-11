@@ -42,7 +42,7 @@ export class ProductsController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  delete(@Param('id') id: string) {
+  delete(@Param('id', ParseUUIDPipe) id: string) {
     return this.productService.delete(id);
   }
 

@@ -1,4 +1,12 @@
-import { Controller, Get, Param, Req, Patch, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Req,
+  Patch,
+  UseGuards,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { DeliveryService } from './delivery.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -15,7 +23,10 @@ export class DeliveryController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  async orderDelivered(@Param('id') id: string, @Req() req: Request) {
+  async orderDelivered(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Req() req: Request,
+  ) {
     return this.deliveryService.update(id, req);
   }
 }

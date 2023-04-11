@@ -38,13 +38,13 @@ export class OrdersController {
 
   @Patch(':id/status')
   @UseGuards(JwtAuthGuard)
-  updateOrder(@Param('id') id: string, @Req() req: Request) {
+  updateOrder(@Param('id', ParseUUIDPipe) id: string, @Req() req: Request) {
     return this.orderService.update(id, req);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  delete(@Param('id') id: string, @Req() req: Request) {
+  delete(@Param('id', ParseUUIDPipe) id: string, @Req() req: Request) {
     return this.orderService.delete(id, req);
   }
 }

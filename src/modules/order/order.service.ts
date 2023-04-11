@@ -178,6 +178,17 @@ export class OrderService {
       );
     }
 
+    findOrder.products.forEach(async (product) => {
+      await this.prisma.product.update({
+        where: {
+          id: product.id,
+        },
+        data: {
+          is_available: true,
+        },
+      });
+    });
+
     return this.ordersRepository.delete(id);
   }
 }

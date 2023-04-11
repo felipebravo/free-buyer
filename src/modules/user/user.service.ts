@@ -4,13 +4,11 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { UsersRepository } from './repositories/user.repository';
-import { CreateUserDto } from './dto/create-user.dto';
-import * as jwt from 'jsonwebtoken';
-import { Request } from 'express';
-import axios from 'axios';
 import { AddressRepository } from '../address/repositories/address.repository';
+import { Request } from 'express';
+import * as jwt from 'jsonwebtoken';
+import axios from 'axios';
 
 @Injectable()
 export class UserService {
@@ -18,7 +16,7 @@ export class UserService {
     private userRepository: UsersRepository,
     private addressRepository: AddressRepository,
   ) {}
-  //: Promise<User>
+
   async createUser(createUserDto) {
     const findUser = await this.userRepository.findUserByEmail(
       createUserDto.email,
