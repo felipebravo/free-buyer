@@ -1,0 +1,55 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       String    @id @default(uuid()) @db.VarChar(36)
+  name     String    @db.VarChar(255)
+  email    String    @unique @db.VarChar(254)
+  password String    @db.VarChar(128)
+  products Product[]
+  orders   Order[]
+}
+
+model Address {
+  id       String @id @default(uuid()) @db.VarChar(36)
+  zip_code String @db.VarChar(8)
+  city     String @db.VarChar(50)
+  state    String @db.VarChar(2)
+  district String @db.VarChar(200)
+  street   String @db.VarChar(200)
+  number   Int    @db.Int
+}
+
+model Product {
+  id           String  @id @default(uuid()) @db.VarChar(36)
+  user_id      String  @db.VarChar(36)
+  order_id     String? @db.VarChar(36)
+  product_name String  @db.VarChar(200)
+  is_available Boolean @default(true)
+  user         User    @relation(fields: [user_id], references: [id])
+  order        Order?  @relation(fields: [order_id], references: [id])
+}
+
+model Order {
+  id          String     @id @default(uuid()) @db.VarChar(36)
+  order_date  DateTime   @default(now())
+  user_id     String     @db.VarChar(36)
+  is_accepted Boolean    @default(false)
+  products    Product[]
+  user        User       @relation(fields: [user_id], references: [id])
+  delivery    Delivery[]
+}
+
+model Delivery {
+  id            String    @id @default(uuid()) @db.VarChar(36)
+  is_delivered  Boolean   @default(false)
+  delivery_date DateTime? @db.Timestamp(3)
+  order_id      String    @db.VarChar(36)
+  order         Order     @relation(fields: [order_id], references: [id])
+}
