@@ -10,6 +10,7 @@
 ### Como rodar na minha máquina?
 
 - Clone o projeto `git clone https://github.com/felipebravo/free-buyer.git`
+- Crie uma nova branch a partir da branch develop: `git checkout -b <nome-da-nova-branch> develop`
 - Rode `npm install`
 - Pronto 🎉
 
